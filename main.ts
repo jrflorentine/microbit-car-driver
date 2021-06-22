@@ -1,11 +1,18 @@
 radio.onReceivedNumber(function (receivedNumber) {
-    left_wheel = receivedNumber
+    controller = receivedNumber
 })
-let left_wheel = 0
+let controller = 0
 radio.setGroup(1)
-let right_wheel = 0
-left_wheel = 0
+controller = 0
 basic.forever(function () {
-    servos.P0.run(right_wheel)
-    servos.P1.run(left_wheel)
+    if (controller > 0) {
+        pins.servoWritePin(AnalogPin.P12, Math.map(controller, 0, 100, 90, 180))
+        pins.servoWritePin(AnalogPin.P16, Math.map(100 - controller, 0, 100, 90, 180))
+    } else if (controller < 0) {
+        pins.servoWritePin(AnalogPin.P16, Math.map(Math.abs(controller), -100, 0, -180, 90))
+        pins.servoWritePin(AnalogPin.P12, Math.map(100 - Math.abs(controller), -100, 0, -180, 90))
+    } else {
+        pins.servoWritePin(AnalogPin.P12, 90)
+        pins.servoWritePin(AnalogPin.P16, 90)
+    }
 })
